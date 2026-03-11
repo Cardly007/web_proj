@@ -2,70 +2,69 @@ package com.blogger.blogger_box_backend.controller;
 
 import com.blogger.blogger_box_backend.dto.CreateCategoryRequest;
 import com.blogger.blogger_box_backend.model.Category;
-import io.swagger.v3.oas.annotations.links.Link;
+import com.blogger.blogger_box_backend.services.CategoryService;
+
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
+
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
 @RestController
+@Tag(name = "Category Apis", description = "les differents endpoint de l'api category")
 @RequestMapping("/v1/categories")
 public class CategoryController {
 
-    private List<Category> lst;
+    private final CategoryService service;
 
-    public CategoryController(){
-        lst  = new ArrayList<Category>();
-        lst.add(new Category("Football"));
-        lst.add(new Category("NBA"));
-        lst.add(new Category("Poker"));
-        lst.add(new Category("Millionaire"));
+    public CategoryController(CategoryService service) {
+        this.service = service;
     }
 
     @GetMapping("/")
+    @Operation(description = "Get all categories")
     public List<Category> listCategories() {
-        return lst;
+        return service.listCategories();
     }
 
     @GetMapping("/{id}")
+    @Operation(description = "Get category by id")
     public Category categoryById(@PathVariable UUID id) {
-       for( Category e : lst){
-           if (e.getId().equals(id)){
-               return e;
-           }
-       }
-        return null;
+
+        return service.categoryById(id);
     }
 
     @PostMapping("/")
+    @Operation(description = "Create a new category")
     public Category create(@RequestBody CreateCategoryRequest request) {
-        Category n = new Category(request.getName());
-        lst.add(n);
-        return n;
+
+        return service.create(request);
     }
 
     @PutMapping("/{id}")
+    @Operation(description = "Update an existing category")
     public Category update(@PathVariable UUID id, @RequestBody CreateCategoryRequest request) {
 
-        Category val = categoryById(id);
-        val.setName(request.getName());
-        return val;
+        return service.update(id, request);
+
+    }
+
+    @PatchMapping("/{id}")
+    @Operation(description = "Update a sub property of an existing category")
+    public Category update_sub(@PathVariable UUID id, @RequestBody CreateCategoryRequest request) {
+
+        return service.update_sub(id, request);
 
     }
 
     @DeleteMapping("/{id}")
-    public Category removeById(@PathVariable UUID id){
-        Category val;
-        for( Category e : lst){
-            if (e.getId().equals(id)){
-                val = e;
-            }
-        }
+    @Operation(description = "Delete a category")
+    public Category removeById(@PathVariable UUID id) {
 
-        lst.remove(val);
+        return service.removeById(id);
 
     }
-
 
 }
