@@ -43,7 +43,7 @@ public class PostController {
         return service.getPostByCateory(idCategory);
     }
 
-    @GetMapping("/")
+    @GetMapping("/{date}")
     @Operation(description = "Search posts by created date")
     public List<Post> getPostsByDate(@RequestAttribute Date dd) {
         return service.getPostsByDate(dd);
