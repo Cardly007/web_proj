@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
+import com.blogger.blogger_box_backend.repositories.CategoryRepository;
 import org.springframework.stereotype.Service;
 
 import com.blogger.blogger_box_backend.dto.CreateCategoryRequest;
@@ -15,31 +16,48 @@ public class CategoryServiceImpl implements CategoryService {
 
     private List<Category> lst;
 
-    public CategoryServiceImpl() {
-        lst = new ArrayList<Category>();
-        lst.add(new Category("Football"));
-        lst.add(new Category("NBA"));
-        lst.add(new Category("Poker"));
-        lst.add(new Category("Millionaire"));
+    private final CategoryRepository repository;
+
+    public  CategoryServiceImpl (CategoryRepository repository)
+    {
+        this.repository = repository;
     }
 
+//    public CategoryServiceImpl() {
+//        lst = new ArrayList<Category>();
+//        lst.add(new Category("Football"));
+//        lst.add(new Category("NBA"));
+//        lst.add(new Category("Poker"));
+//        lst.add(new Category("Millionaire"));
+//    }
+
     public List<Category> listCategories() {
-        return lst;
+        return repository.findAll();
     }
 
     public Category categoryById(UUID id) {
-        for (Category e : lst) {
-            if (e.getId().equals(id)) {
-                return e;
-            }
-        }
-        return null;
+        return repository.findById(id).orElse(null);
     }
 
     public Category create(CreateCategoryRequest request) {
         Category n = new Category(request.getName());
         lst.add(n);
         return n;
+    }
+
+    public Category create(String name) {
+        Category category = new Category(name);
+        return repository.save(category);
+    }
+
+    public Category updateName(UUID id, String name) {
+        Category val = categoryById(id);
+        if(val == null)
+        {
+            return null;
+        }
+        val.setName(name);
+        return repository.save(val);
     }
 
     public Category update(UUID id, CreateCategoryRequest request) {
@@ -58,20 +76,9 @@ public class CategoryServiceImpl implements CategoryService {
 
     }
 
-    public Category removeById(UUID id) {
-        Category val = null;
-        for (Category e : lst) {
-            if (e.getId().equals(id)) {
-                val = e;
-            }
-        }
-
-        if (val != null) {
-            lst.remove(val);
-            return val;
-        }
-
-        return null;
+    public Boolean removeById(UUID id) {
+        repository.deleteById(id);
+        return true;
 
     }
 

@@ -18,5 +18,5 @@ public interface CategoryService {
 
     public Category update_sub(UUID id, CreateCategoryRequest request);
 
-    public Category removeById(UUID id);
+    public Boolean removeById(UUID id);
 }

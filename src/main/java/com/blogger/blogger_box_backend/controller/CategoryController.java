@@ -61,7 +61,7 @@ public class CategoryController {
 
     @DeleteMapping("/{id}")
     @Operation(description = "Delete a category")
-    public Category removeById(@PathVariable UUID id) {
+    public Boolean removeById(@PathVariable UUID id) {
 
         return service.removeById(id);
 
