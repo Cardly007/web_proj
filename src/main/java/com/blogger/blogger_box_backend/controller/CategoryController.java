@@ -18,15 +18,20 @@ import java.util.UUID;
 public class CategoryController {
 
     private final CategoryService service;
+    private final CategoryService categoryService;
 
-    public CategoryController(CategoryService service) {
+    public CategoryController(CategoryService service, CategoryService categoryService) {
         this.service = service;
+        this.categoryService = categoryService;
     }
 
     @GetMapping("/")
     @Operation(description = "Get all categories")
-    public List<Category> listCategories() {
-        return service.listCategories();
+    public List<Category> listCategories(@RequestParam(required = false) String name) {
+        List<Category> categories = name == null || name.isBlank()
+                ? categoryService.listCategories()
+                : categoryService.getAllLikeName(name);
+        return categories;
     }
 
     @GetMapping("/{id}")

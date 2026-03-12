@@ -35,6 +35,8 @@ public class CategoryServiceImpl implements CategoryService {
         return repository.findAll();
     }
 
+    public List<Category> getAllLikeName(String name){ return  repository.findAllLikeName(name);}
+
     public Category categoryById(UUID id) {
         return repository.findById(id).orElse(null);
     }

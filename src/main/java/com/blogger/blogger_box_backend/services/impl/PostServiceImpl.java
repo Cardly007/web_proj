@@ -37,6 +37,8 @@ public class PostServiceImpl implements PostService {
         return null;
     } // NO EXIST
 
+    public  List<Post> findAllLikeTitle(String title){ return  repository.findAllLikeTitle(title);}
+
     public Post create(PostRequest request) {
         Post p = new Post(request.tittle(),
                 request.content(),

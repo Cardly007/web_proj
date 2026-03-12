@@ -22,4 +22,6 @@ public interface PostService {
     public Post update(UUID id, PostRequest request);
 
     public boolean Delete(UUID id);
+
+    public List<Post> findAllLikeTitle(String title);
 }

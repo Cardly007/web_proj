@@ -19,4 +19,6 @@ public interface CategoryService {
     public Category update_sub(UUID id, CreateCategoryRequest request);
 
     public Boolean removeById(UUID id);
+
+    public List<Category> getAllLikeName(String name);
 }

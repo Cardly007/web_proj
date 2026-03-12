@@ -22,15 +22,20 @@ import java.util.UUID;
 public class PostController {
 
     private final PostService service;
+    private final PostService postService;
 
-    public PostController(PostService service) {
+    public PostController(PostService service, PostService postService) {
         this.service = service;
+        this.postService = postService;
     }
 
     @GetMapping("/")
     @Operation(description = "Get all posts")
-    public List<Post> getPost() {
-        return service.getPost();
+    public List<Post> getPost(@RequestParam(required = false) String title) {
+        List<Post> posts = title == null || title.isBlank()
+                ? postService.getPost()
+                :postService.findAllLikeTitle(title);
+        return posts;
     }
 
     @GetMapping("/{id}/posts")
