@@ -39,15 +39,20 @@ public class CategoryServiceImpl implements CategoryService {
         return repository.findById(id).orElse(null);
     }
 
-    public Category create(CreateCategoryRequest request) {
-        Category n = new Category(request.getName());
-        lst.add(n);
-        return n;
-    }
+//    public Category create(CreateCategoryRequest request) {
+//        Category n = new Category(request.getName());
+//        lst.add(n);
+//        return n;
+//    }
 
     public Category create(String name) {
         Category category = new Category(name);
         return repository.save(category);
+    }
+
+    public Category create(CreateCategoryRequest request) {
+        Category n = new Category(request.getName());
+        return repository.save(n);
     }
 
     public Category updateName(UUID id, String name) {

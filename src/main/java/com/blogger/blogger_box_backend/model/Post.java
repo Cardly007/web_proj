@@ -22,12 +22,23 @@ public class Post {
     private  String content;
 
     @Column(name =  "created_date")
-    @JsonFormat(pattern = "yyyy-mm-dd-hh:mn:ss")
+    @JsonFormat(pattern = "yyyy-mm-dd-hh:mn:ss.SSS'Z'")
     private LocalDateTime created_date;
 
     @ManyToOne
     @JoinColumn(name = "category_id")
     private  Category category;
+
+    public Post() {
+    }
+
+    public Post( String title, String content, LocalDateTime created_date, Category category) {
+        this.id = UUID.randomUUID();
+        this.title = title;
+        this.content = content;
+        this.created_date = created_date;
+        this.category = category;
+    }
 
     public UUID getId() {
         return id;

@@ -1,21 +1,17 @@
 package com.blogger.blogger_box_backend.controller;
 
+import com.blogger.blogger_box_backend.dto.CreateCategoryRequest;
+import com.blogger.blogger_box_backend.dto.PostRequest;
 import com.blogger.blogger_box_backend.model.Post;
 import com.blogger.blogger_box_backend.services.PostService;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestAttribute;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.sql.Date;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
 
@@ -39,32 +35,32 @@ public class PostController {
 
     @GetMapping("/{id}/posts")
     @Operation(description = "Get all post of a certain categories")
-    public List<Post> getPostByCateory(@PathVariable UUID idCategory) {
-        return service.getPostByCateory(idCategory);
+    public List<Post> getPostByCateory(@RequestParam UUID idCategory) {
+        return service.getPostByCategory(idCategory);
     }
 
     @GetMapping("/{date}")
     @Operation(description = "Search posts by created date")
-    public List<Post> getPostsByDate(@RequestAttribute Date dd) {
+    public List<Post> getPostsByDate(@RequestParam LocalDateTime dd) {
         return service.getPostsByDate(dd);
     }
 
     @PostMapping("/")
     @Operation(description = "Create post")
-    public Post create() {
-        return service.create();
+    public Post create(@RequestBody PostRequest body) {
+        return service.create(body);
     }
 
     @PutMapping("/{id}")
     @Operation(description = "Update an existing post")
-    public Post update(@PathVariable UUID id) {
-        return service.update(id);
+    public Post update(@PathVariable UUID id, @RequestBody PostRequest body) {
+        return service.update(id,  body);
 
     }
 
     @DeleteMapping("/{id}")
     @Operation(description = "Delete post")
-    public Post Delete(@PathVariable UUID id) {
+    public boolean Delete(@PathVariable UUID id) {
         return service.Delete(id);
     }
 
