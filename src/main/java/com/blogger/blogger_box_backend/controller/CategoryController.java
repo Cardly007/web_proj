@@ -7,8 +7,10 @@ import com.blogger.blogger_box_backend.services.CategoryService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.net.URI;
 import java.util.List;
 import java.util.UUID;
 
@@ -27,48 +29,54 @@ public class CategoryController {
 
     @GetMapping("/")
     @Operation(description = "Get all categories")
-    public List<Category> listCategories(@RequestParam(required = false) String name) {
+    public ResponseEntity<List<Category>> listCategories(@RequestParam(required = false) String name) {
         List<Category> categories = name == null || name.isBlank()
                 ? categoryService.listCategories()
                 : categoryService.getAllLikeName(name);
-        return categories;
+        return ResponseEntity.ok(categories);
     }
 
     @GetMapping("/{id}")
     @Operation(description = "Get category by id")
-    public Category categoryById(@PathVariable UUID id) {
+    public ResponseEntity<Category> categoryById(@PathVariable UUID id) throws CategoryNotFoundByIdException {
 
-        return service.categoryById(id);
+        Category category = service.categoryById(id);
+        return ResponseEntity.ok(category);
     }
 
     @PostMapping("/")
     @Operation(description = "Create a new category")
-    public Category create(@RequestBody CreateCategoryRequest request) {
-
-        return service.create(request);
+    public ResponseEntity<Category> create(@RequestBody CreateCategoryRequest request) {
+        Category category = service.create(request);
+        return ResponseEntity
+                .created(URI.create("v1/categories/" + category.getId()))
+                .body(category);
     }
 
     @PutMapping("/{id}")
     @Operation(description = "Update an existing category")
-    public Category update(@PathVariable UUID id, @RequestBody CreateCategoryRequest request) {
-
-        return service.update(id, request);
-
+    public ResponseEntity<Category> update(@PathVariable UUID id, @RequestBody CreateCategoryRequest request) {
+        Category category = service.update(id, request);
+        return ResponseEntity.ok(category);
     }
 
     @PatchMapping("/{id}")
     @Operation(description = "Update a sub property of an existing category")
-    public Category update_sub(@PathVariable UUID id, @RequestBody CreateCategoryRequest request) {
+    public ResponseEntity<Category> update_sub(@PathVariable UUID id, @RequestBody CreateCategoryRequest request) {
 
-        return service.update_sub(id, request);
+        Category category = service.update_sub(id, request);
+        return ResponseEntity.ok(category);
 
     }
 
     @DeleteMapping("/{id}")
     @Operation(description = "Delete a category")
-    public Boolean removeById(@PathVariable UUID id) {
+    public ResponseEntity<String> removeById(@PathVariable UUID id) {
 
-        return service.removeById(id);
+        service.removeById(id);
+        return ResponseEntity
+                .status(200)
+                .body("Succes");
 
     }
 

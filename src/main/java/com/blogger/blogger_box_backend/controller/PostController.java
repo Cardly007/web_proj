@@ -8,6 +8,7 @@ import com.blogger.blogger_box_backend.services.PostService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.sql.Date;
@@ -31,42 +32,49 @@ public class PostController {
 
     @GetMapping("/")
     @Operation(description = "Get all posts")
-    public List<Post> getPost(@RequestParam(required = false) String title) {
+    public ResponseEntity<List<Post>> getPost(@RequestParam(required = false) String title) {
         List<Post> posts = title == null || title.isBlank()
                 ? postService.getPost()
-                :postService.findAllLikeTitle(title);
-        return posts;
+                : postService.findAllLikeTitle(title);
+        return ResponseEntity.ok(posts);
     }
 
     @GetMapping("/{id}/posts")
     @Operation(description = "Get all post of a certain categories")
-    public List<Post> getPostByCateory(@RequestParam UUID idCategory) {
-        return service.getPostByCategory(idCategory);
+    public ResponseEntity<List<Post>> getPostByCateory(@RequestParam UUID idCategory) {
+        List<Post> posts = service.getPostByCategory(idCategory);
+        return ResponseEntity.ok(posts);
     }
 
     @GetMapping("/{date}")
     @Operation(description = "Search posts by created date")
-    public List<Post> getPostsByDate(@RequestParam LocalDateTime dd) {
-        return service.getPostsByDate(dd);
+    public ResponseEntity<List<Post>> getPostsByDate(@RequestParam LocalDateTime dd) {
+        List<Post> posts = service.getPostsByDate(dd);
+        return ResponseEntity.ok(posts);
     }
 
     @PostMapping("/")
     @Operation(description = "Create post")
-    public Post create(@RequestBody PostRequest body) {
-        return service.create(body);
+    public ResponseEntity<Post> create(@RequestBody PostRequest body) {
+        Post post = service.create(body);
+        return ResponseEntity.ok(post);
     }
 
     @PutMapping("/{id}")
     @Operation(description = "Update an existing post")
-    public Post update(@PathVariable UUID id, @RequestBody PostRequest body) {
-        return service.update(id,  body);
+    public ResponseEntity<Post> update(@PathVariable UUID id, @RequestBody PostRequest body) {
+        Post post = service.update(id, body);
+        return ResponseEntity.ok(post);
 
     }
 
     @DeleteMapping("/{id}")
     @Operation(description = "Delete post")
-    public boolean Delete(@PathVariable UUID id) {
-        return service.Delete(id);
+    public ResponseEntity<String> Delete(@PathVariable UUID id) {
+        service.Delete(id);
+        return ResponseEntity
+                .status(200)
+                .body("Succes");
     }
 
 }
