@@ -20,19 +20,17 @@ import java.util.UUID;
 public class CategoryController {
 
     private final CategoryService service;
-    private final CategoryService categoryService;
 
-    public CategoryController(CategoryService service, CategoryService categoryService) {
+    public CategoryController(CategoryService service) {
         this.service = service;
-        this.categoryService = categoryService;
     }
 
     @GetMapping("/")
     @Operation(description = "Get all categories")
     public ResponseEntity<List<Category>> listCategories(@RequestParam(required = false) String name) {
         List<Category> categories = name == null || name.isBlank()
-                ? categoryService.listCategories()
-                : categoryService.getAllLikeName(name);
+                ? service.listCategories()
+                : service.getAllLikeName(name);
         return ResponseEntity.ok(categories);
     }
 
@@ -74,10 +72,7 @@ public class CategoryController {
     public ResponseEntity<String> removeById(@PathVariable UUID id) {
 
         service.removeById(id);
-        return ResponseEntity
-                .status(200)
-                .body("Succes");
-
+        return ResponseEntity.ok("Success");
     }
 
 }

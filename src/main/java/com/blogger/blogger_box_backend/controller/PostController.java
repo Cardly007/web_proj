@@ -23,19 +23,17 @@ import java.util.UUID;
 public class PostController {
 
     private final PostService service;
-    private final PostService postService;
 
-    public PostController(PostService service, PostService postService) {
+    public PostController(PostService service) {
         this.service = service;
-        this.postService = postService;
     }
 
-    @GetMapping("/")
+    @GetMapping("")
     @Operation(description = "Get all posts")
     public ResponseEntity<List<Post>> getPost(@RequestParam(required = false) String title) {
         List<Post> posts = title == null || title.isBlank()
-                ? postService.getPost()
-                : postService.findAllLikeTitle(title);
+                ? service.getPost()
+                : service.findAllLikeTitle(title);
         return ResponseEntity.ok(posts);
     }
 
@@ -70,11 +68,9 @@ public class PostController {
 
     @DeleteMapping("/{id}")
     @Operation(description = "Delete post")
-    public ResponseEntity<String> Delete(@PathVariable UUID id) {
-        service.Delete(id);
-        return ResponseEntity
-                .status(200)
-                .body("Succes");
+    public ResponseEntity<String> delete(@PathVariable UUID id) {
+        service.Delete(id); // Renamed from Delete to follow Java conventions
+        return ResponseEntity.ok("Success");
     }
 
 }

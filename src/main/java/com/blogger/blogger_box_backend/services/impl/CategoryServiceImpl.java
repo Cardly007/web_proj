@@ -18,34 +18,21 @@ public class CategoryServiceImpl implements CategoryService {
 
     private final CategoryRepository repository;
 
-    public  CategoryServiceImpl (CategoryRepository repository)
-    {
+    public CategoryServiceImpl(CategoryRepository repository) {
         this.repository = repository;
     }
-
-//    public CategoryServiceImpl() {
-//        lst = new ArrayList<Category>();
-//        lst.add(new Category("Football"));
-//        lst.add(new Category("NBA"));
-//        lst.add(new Category("Poker"));
-//        lst.add(new Category("Millionaire"));
-//    }
 
     public List<Category> listCategories() {
         return repository.findAll();
     }
 
-    public List<Category> getAllLikeName(String name){ return  repository.findAllLikeName(name);}
+    public List<Category> getAllLikeName(String name) {
+        return repository.findAllLikeName(name);
+    }
 
     public Category categoryById(UUID id) {
         return repository.findById(id).orElse(null);
     }
-
-//    public Category create(CreateCategoryRequest request) {
-//        Category n = new Category(request.getName());
-//        lst.add(n);
-//        return n;
-//    }
 
     public Category create(String name) {
         Category category = new Category(name);
@@ -59,8 +46,7 @@ public class CategoryServiceImpl implements CategoryService {
 
     public Category updateName(UUID id, String name) {
         Category val = categoryById(id);
-        if(val == null)
-        {
+        if (val == null) {
             return null;
         }
         val.setName(name);
@@ -69,18 +55,22 @@ public class CategoryServiceImpl implements CategoryService {
 
     public Category update(UUID id, CreateCategoryRequest request) {
 
-        Category val = categoryById(id);
-        val.setName(request.getName());
-        return val;
-
+        return repository.findById(id)
+                .map(category -> {
+                    category.setName(request.getName());
+                    return repository.save(category);
+                }).orElse(null); // Or consider throwing a NotFoundException
     }
 
     public Category update_sub(UUID id, CreateCategoryRequest request) {
-
-        Category val = categoryById(id);
-        val.setName(request.getName());
-        return val;
-
+        // This method has the same implementation as update().
+        // For a PATCH operation, you might want to add logic to only update non-null
+        // fields.
+        return repository.findById(id)
+                .map(category -> {
+                    category.setName(request.getName());
+                    return repository.save(category);
+                }).orElse(null); // Or consider throwing a NotFoundException
     }
 
     public Boolean removeById(UUID id) {
