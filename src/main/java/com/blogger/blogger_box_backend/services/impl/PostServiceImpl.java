@@ -14,19 +14,19 @@ import com.blogger.blogger_box_backend.services.CategoryService;
 import org.springframework.stereotype.Service;
 import com.blogger.blogger_box_backend.model.Post;
 import com.blogger.blogger_box_backend.services.PostService;
+import org.springframework.data.domain.Sort;
 
 @Service
 public class PostServiceImpl implements PostService {
 
     private final PostRepository repository;
 
-    public  PostServiceImpl(PostRepository repository)
-    {
+    public PostServiceImpl(PostRepository repository) {
         this.repository = repository;
     }
 
     public List<Post> getPost() {
-        return repository.findAll();
+        return repository.findAll(Sort.by(Sort.Direction.DESC, "createdDate"));
     }
 
     public List<Post> getPostByCategory(UUID idCategory) {
@@ -37,36 +37,40 @@ public class PostServiceImpl implements PostService {
         return null;
     } // NO EXIST
 
-    public  List<Post> findAllLikeTitle(String title){ return  repository.findAllLikeTitle(title);}
+    public List<Post> findAllLikeTitle(String title) {
+        return repository.findAllLikeTitle(title);
+    }
 
     public Post create(PostRequest request) {
-        Post p = new Post(request.tittle(),
+        Post p = new Post(request.title(),
                 request.content(),
                 new Timestamp(System.currentTimeMillis()).toLocalDateTime(),
-                CreateCategory(request.categoryid()));
+                CreateCategory(request.categoryId()));
 
         return repository.save(p);
     }
 
     public Post update(UUID id, PostRequest request) {
         Post p = repository.findById(id).orElse(null);
-        if(p == null) return  null;
+        if (p == null)
+            return null;
 
-        p.setTitle(request.tittle());
+        p.setTitle(request.title());
         p.setContent(request.content());
-        p.setCategory(CreateCategory(request.categoryid()));
+        p.setCategory(CreateCategory(request.categoryId()));
         return repository.save(p);
     }
 
     public boolean Delete(UUID id) {
-         repository.deleteById(id);
-         return  true;
+        repository.deleteById(id);
+        return true;
     }
 
-    public Category CreateCategory(UUID categoryId){
-        if(categoryId == null) return  null;
+    public Category CreateCategory(UUID categoryId) {
+        if (categoryId == null)
+            return null;
         Category cat = new Category();
         cat.setId(categoryId);
-        return  cat;
+        return cat;
     }
 }

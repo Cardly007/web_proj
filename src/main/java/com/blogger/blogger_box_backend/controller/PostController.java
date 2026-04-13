@@ -20,6 +20,8 @@ import java.util.UUID;
 @Tag(name = "Posts Apis", description = "les differents endpoint de l'api post")
 
 @RequestMapping("/v1/posts")
+
+@CrossOrigin(origins = "http://localhost:4200")
 public class PostController {
 
     private final PostService service;
@@ -51,7 +53,7 @@ public class PostController {
         return ResponseEntity.ok(posts);
     }
 
-    @PostMapping("/")
+    @PostMapping("")
     @Operation(description = "Create post")
     public ResponseEntity<Post> create(@RequestBody PostRequest body) {
         Post post = service.create(body);

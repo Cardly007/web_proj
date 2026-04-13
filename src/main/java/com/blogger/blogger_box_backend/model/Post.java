@@ -12,31 +12,31 @@ import java.util.UUID;
 public class Post {
 
     @Id
-    @Column(name =  "id")
+    @Column(name = "id")
     private UUID id;
 
-    @Column(name =  "title")
-    private  String title;
+    @Column(name = "title")
+    private String title;
 
-    @Column(name =  "content")
-    private  String content;
+    @Column(name = "content")
+    private String content;
 
-    @Column(name =  "created_date")
-    @JsonFormat(pattern = "yyyy-mm-dd-hh:mn:ss.SSS'Z'")
-    private LocalDateTime created_date;
+    @Column(name = "created_date")
+    @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'")
+    private LocalDateTime createdDate;
 
     @ManyToOne
     @JoinColumn(name = "category_id")
-    private  Category category;
+    private Category category;
 
     public Post() {
     }
 
-    public Post( String title, String content, LocalDateTime created_date, Category category) {
+    public Post(String title, String content, LocalDateTime createdDate, Category category) {
         this.id = UUID.randomUUID();
         this.title = title;
         this.content = content;
-        this.created_date = created_date;
+        this.createdDate = createdDate;
         this.category = category;
     }
 
@@ -64,12 +64,12 @@ public class Post {
         this.content = content;
     }
 
-    public LocalDateTime getCreated_date() {
-        return created_date;
+    public LocalDateTime getCreatedDate() {
+        return createdDate;
     }
 
-    public void setCreated_date(LocalDateTime created_date) {
-        this.created_date = created_date;
+    public void setCreatedDate(LocalDateTime createdDate) {
+        this.createdDate = createdDate;
     }
 
     public Category getCategory() {
